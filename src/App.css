@@ -1,0 +1,237 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital@1&family=Parisienne&display=swap");
+
+/* ---- design tokens ---- */
+:root {
+  --th-bg-1: #1a0510;
+  --th-bg-2: #0a0007;
+  --th-bg-3: #050004;
+  --th-caption-color: rgba(255, 214, 224, 0.85);
+  --th-caption-font: "Parisienne", "Cormorant Garamond", Georgia, serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--th-bg-3);
+}
+
+/* ---- page shell ---- */
+.th-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: radial-gradient(
+    130% 80% at 50% 15%,
+    var(--th-bg-1) 0%,
+    var(--th-bg-2) 55%,
+    var(--th-bg-3) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: clamp(0.9rem, 4vw, 1.4rem);
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+
+  padding: max(1.25rem, env(safe-area-inset-top))
+    max(1.25rem, env(safe-area-inset-right))
+    max(1.5rem, env(safe-area-inset-bottom))
+    max(1.25rem, env(safe-area-inset-left));
+}
+
+/* ---- falling petals, behind everything ---- */
+.th-petals {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---- gift-open intro ---- */
+.th-gift {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  cursor: pointer;
+  color: rgba(255, 214, 224, 0.9);
+  background: radial-gradient(
+    130% 80% at 50% 15%,
+    var(--th-bg-1) 0%,
+    var(--th-bg-2) 55%,
+    var(--th-bg-3) 100%
+  );
+  transition: opacity 0.7s ease, transform 0.7s ease, visibility 0.7s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.th-gift-hidden {
+  opacity: 0;
+  transform: scale(1.15);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.th-gift-icon {
+  filter: drop-shadow(0 0 14px rgba(255, 150, 178, 0.55));
+  animation: th-gift-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes th-gift-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.th-gift-text {
+  margin: 0;
+  font-family: var(--th-caption-font);
+  font-size: clamp(1.2rem, 5vw, 1.6rem);
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+}
+
+/* ---- sound toggle ---- */
+.th-sound-toggle {
+  position: absolute;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, env(safe-area-inset-right));
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 200, 215, 0.25);
+  background: rgba(255, 180, 200, 0.08);
+  backdrop-filter: blur(6px);
+  color: rgba(255, 214, 224, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.th-sound-toggle:hover {
+  background: rgba(255, 180, 200, 0.16);
+  border-color: rgba(255, 200, 215, 0.45);
+}
+
+.th-sound-toggle:active {
+  transform: scale(0.92);
+}
+
+/* ---- heart canvas ---- */
+.th-outer {
+  position: relative;
+  z-index: 2;
+  width: min(94vw, 92dvh, 620px);
+  height: min(94vw, 92dvh, 620px);
+  max-height: 62dvh;
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+}
+
+.th-canvas-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.th-canvas-wrap.th-visible {
+  opacity: 1;
+}
+
+.th-canvas {
+  display: block;
+}
+
+/* ---- caption ---- */
+.th-caption {
+  position: relative;
+  z-index: 2;
+  font-family: var(--th-caption-font);
+  font-size: clamp(1.3rem, 6vw, 2.1rem);
+  color: var(--th-caption-color);
+  letter-spacing: 0.01em;
+  min-height: 2.2rem;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1s ease 0.4s;
+  padding: 0 0.5rem;
+}
+
+.th-caption.th-visible {
+  opacity: 1;
+}
+
+.th-cursor {
+  display: inline-block;
+  width: 2px;
+  margin-left: 2px;
+  animation: th-blink 1s step-end infinite;
+}
+
+@keyframes th-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---- respect reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .th-outer {
+    transition: none;
+  }
+  .th-canvas-wrap,
+  .th-caption,
+  .th-gift {
+    transition: opacity 0.3s ease;
+  }
+  .th-cursor,
+  .th-gift-icon {
+    animation: none;
+  }
+  .th-cursor {
+    opacity: 0 !important;
+  }
+}
+
+/* ---- short/landscape phones ---- */
+@media (max-height: 480px) {
+  .th-outer {
+    max-height: 54dvh;
+  }
+  .th-caption {
+    font-size: clamp(1rem, 5vw, 1.5rem);
+  }
+  .th-sound-toggle {
+    width: 34px;
+    height: 34px;
+  }
+  .th-gift-icon {
+    width: 72px;
+    height: 72px;
+  }
+}
